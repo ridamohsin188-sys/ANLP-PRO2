@@ -1,0 +1,118 @@
+Task 1 — BERT-Based Emotion Detection
+ Project Overview
+
+This project implements an emotion detection model using the BERT (Bidirectional Encoder Representations from Transformers) architecture.
+The model is fine-tuned on a text dataset containing user messages labeled with emotional categories such as Joy, Sadness, Neutral, and Anger.
+
+The aim is to predict the underlying emotion in a given text, supporting applications like sentiment analysis, chatbots, and social media monitoring.
+
+ Dataset
+
+Files Used:
+
+emotions-dataset.csv → Contains text and corresponding numeric emotion labels.
+
+emotion_labels.csv → Contains label mappings (numeric → emotion name).
+
+Label	Emotion
+0	Joy
+1	Sadness
+2	Neutral
+3	Anger
+ Model Architecture
+
+Base Model: bert-base-uncased
+
+Framework: Hugging Face Transformers
+
+Classifier: A linear layer added on top of BERT for sequence classification
+
+Number of Labels: 4
+ Steps Performed
+1. Data Loading & Preprocessing
+
+Read dataset using pandas
+
+Encoded emotion labels using LabelEncoder
+
+Split into training (80%) and validation (20%) sets
+
+2. Model Fine-Tuning
+
+Tokenized text data using BertTokenizer
+
+Fine-tuned BERT using BertForSequenceClassification
+
+Optimizer: torch.optim.AdamW
+
+Trained for 3 epochs
+
+3. Model Evaluation
+
+Computed training and validation loss after each epoch
+
+Final Validation Accuracy ≈ 65.9%
+
+4. Model Saving
+
+Saved trained model and related files:
+
+emotion-bert/
+│
+├── config.json
+├── vocab.txt
+├── model.safetensors
+├── tokenizer_config.json
+├── special_tokens_map.json
+├── label_encoder.pkl
+
+5. Testing
+
+Used the fine-tuned model for emotion prediction on unseen text samples.
+
+Example Predictions
+Text	Predicted Emotion
+I am so happy today!	Joy
+This is terrible and I feel sad.	Sadness
+I'm feeling calm and okay.	Neutral
+I am angry about the delay!	Anger
+Technologies Used
+
+Python 3.12
+
+PyTorch
+
+Transformers (Hugging Face)
+
+Pandas
+
+Scikit-learn
+
+TQDM
+ Quick Start
+
+To run the project in Google Colab or locally:
+
+!pip install torch transformers scikit-learn pandas tqdm
+
+from transformers import BertTokenizer, BertForSequenceClassification
+import torch
+
+tokenizer = BertTokenizer.from_pretrained("emotion-bert")
+model = BertForSequenceClassification.from_pretrained("emotion-bert")
+
+text = "I am very excited about this!"
+inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=128)
+outputs = model(**inputs)
+label_to_emotion = {0:"Joy", 1:"Sadness", 2:"Neutral", 3:"Anger"}
+print("Predicted Emotion:", label_to_emotion[torch.argmax(outputs.logits).item()])
+
+Results Summary
+
+Model: BERT (base, uncased)
+
+Training Epochs: 3( 2 completed, had to stop mid way because of time)
+
+Validation Accuracy: 65.9%
+
+Task Status: ✅ Completed Successfully
